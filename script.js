@@ -10,6 +10,9 @@
 
 // https://www.gismeteo.ru/diary/205920/2019/12/
 
+let lastReadedData = null;
+let preData = null;
+
 function copyToClipboard(str) {
   var area = document.createElement('textarea');
 
@@ -18,6 +21,47 @@ function copyToClipboard(str) {
   area.select();
   document.execCommand('copy');
   document.body.removeChild(area);
+}
+
+function resetStorage() {
+  delete window.localStorage.tempBlockData;
+  printPreData();
+}
+
+function printPreData() {
+  preData.textContent = 'This:\n';
+  preData.textContent += Object.keys(lastReadedData)
+    .map(key => `${key}: ${lastReadedData[key]}`)
+    .join('\n');
+}
+
+function sumAll() {
+  let printData = lastReadedData;
+  if (
+    typeof window.localStorage.tempBlockData === 'string' &&
+    window.localStorage.tempBlockData.length
+  ) {
+    printData = JSON.parse(window.localStorage.tempBlockData);
+  }
+  preData.textContent = 'All Sum:\n';
+  preData.textContent += Object.keys(printData)
+    .map(key => `${key}: ${printData[key]}`)
+    .join('\n');
+}
+
+function addStorage() {
+  let ls = lastReadedData;
+  if (
+    typeof window.localStorage.tempBlockData === 'string' &&
+    window.localStorage.tempBlockData.length
+  ) {
+    ls = JSON.parse(window.localStorage.tempBlockData);
+    for (const key in ls) {
+      ls[key] += lastReadedData[key];
+    }
+  }
+  window.localStorage.tempBlockData = JSON.stringify(ls);
+  printPreData();
 }
 
 (function () {
@@ -45,17 +89,12 @@ function copyToClipboard(str) {
       data[ttt]++;
     }
   }
-  let count = 0;
-  for (const key in data) {
-    count += data[key];
-  }
+  lastReadedData = data;
+
   const newDiv = document.createElement('div');
   let newPre = document.createElement('pre');
-  newPre.textContent = 'Sum:\n';
   newPre.style.textAlign = 'left';
-  newPre.textContent += Object.keys(data)
-    .map(key => `${key}: ${data[key]}`)
-    .join('\n');
+  preData = newPre;
   newDiv.appendChild(newPre);
 
   newDiv.id = 'tampDataBlock';
@@ -64,29 +103,54 @@ function copyToClipboard(str) {
   newDiv.style.left = 0;
   newDiv.style.backgroundColor = '#fff';
   newDiv.style.border = '1px solid black';
-  newDiv.style.height = '180px';
-  newDiv.style.width = '50px';
+  newDiv.style.height = '215px';
+  newDiv.style.width = '60px';
   newDiv.style.zIndex = 1000;
   newDiv.style.paddingLeft = '10px';
   newDiv.style.marginBottom = '10px';
   newDiv.style.marginLeft = '10px';
 
-  const newA = document.createElement('a');
+  let newA = document.createElement('a');
   newA.textContent = 'copy';
   newA.href = '#';
   newA.style.textDecoration = 'none';
-  newA.onclick = copyToClipboard(newPre.textContent);
-
+  newA.style.width = '50px';
+  newA.style.float = 'left';
+  newA.onclick = () => {
+    copyToClipboard(newPre.textContent);
+  };
   newDiv.appendChild(newA);
 
-  document.body.appendChild(newDiv);
-  
+  newA = document.createElement('a');
+  newA.textContent = 'add';
+  newA.href = '#';
+  newA.style.textDecoration = 'none';
+  newA.style.float = 'left';
+  newA.style.marginTop = '2px';
+  newA.style.width = '50px';
+  newA.onclick = addStorage;
+  newDiv.appendChild(newA);
 
-  console.log(JSON.stringify(data));
-  console.log('Days:', count);
-  console.log(
-    Object.keys(data)
-      .map(key => `${key}: ${data[key]}`)
-      .join('\n')
-  );
+  newA = document.createElement('a');
+  newA.textContent = 'reset';
+  newA.href = '#';
+  newA.style.textDecoration = 'none';
+  newA.style.width = '50px';
+  newA.style.float = 'left';
+  newA.style.marginTop = '2px';
+  newA.onclick = resetStorage;
+  newDiv.appendChild(newA);
+
+  newA = document.createElement('a');
+  newA.textContent = 'sumAll';
+  newA.href = '#';
+  newA.style.textDecoration = 'none';
+  newA.style.width = '50px';
+  newA.style.marginTop = '2px';
+  newA.style.float = 'left';
+  newA.onclick = sumAll;
+  newDiv.appendChild(newA);
+
+  printPreData();
+  document.body.appendChild(newDiv);
 })();
