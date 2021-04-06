@@ -7,6 +7,7 @@
 // @match         https://www.gismeteo.ru/diary/*/*/*/
 // @grant        none
 // ==/UserScript==
+// repo link https://github.com/AleksDolgop/GetSummaryWindGismeteo/blob/main/script.js
 
 // https://www.gismeteo.ru/diary/205920/2019/12/
 
