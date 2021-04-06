@@ -76,12 +76,12 @@ function addStorage() {
   const data = {
     С: 0,
     СВ: 0,
-    СЗ: 0,
     В: 0,
-    З: 0,
-    ЮЗ: 0,
     ЮВ: 0,
     Ю: 0,
+    ЮЗ: 0,
+    З: 0,
+    СЗ: 0,
   };
   for (const elem of table.children) {
     const ttt = elem.children[5].textContent.slice(0, 2).trim();
