@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name         Get summary wind
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
+// @downloadURL https://raw.githubusercontent.com/AleksDolgop/GetSummaryWindGismeteo/main/script.js
+// @updateURL https://raw.githubusercontent.com/AleksDolgop/GetSummaryWindGismeteo/main/script.js
 // @description  Собирает сумму ветров от направлений
 // @author       AleksDolgop
 // @match         https://www.gismeteo.ru/diary/*/*/*/
